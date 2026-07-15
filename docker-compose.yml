@@ -5,4 +5,4 @@ services:
     ports:
       - 80:8080
     env_file:
-      - /var/app/current/.env
+      - .env
