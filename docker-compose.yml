@@ -1,20 +1,8 @@
-name: bia
 services:
   server:
+    build: . 
     container_name: bia
-    environment:
-      DB_HOST: bia-db.co3qikk86wjk.us-east-1.rds.amazonaws.com
-      DB_PORT: "5432"
-      DB_PWD: n5p8zAtZBP6hjexkQ8uk
-      DB_USER: postgres
-    image: 534546104156.dkr.ecr.us-east-1.amazonaws.com/bia:afcae40
-    networks:
-      default: null
     ports:
-      - mode: ingress
-        target: 8080
-        published: "80"
-        protocol: tcp
-networks:
-  default:
-    name: bia_default
+      - 80:8080
+    env_file:
+      - .env
