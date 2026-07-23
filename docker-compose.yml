@@ -1,6 +1,6 @@
 services:
   server:
-    build: . 
+    image: __IMAGE_URI__
     container_name: bia
     ports:
       - 80:8080

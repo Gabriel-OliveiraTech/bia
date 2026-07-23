@@ -1,0 +1,32 @@
+version: 0.2
+        
+phases:
+
+  pre_build:
+    commands:
+      - echo "Fazendo login no ECR..."
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 534546104156.dkr.ecr.us-east-1.amazonaws.com
+      - REPOSITORY_URI=534546104156.dkr.ecr.us-east-1.amazonaws.com/bia
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+    finally:
+      - echo "Build finalizado com sucesso em `date`"  
+
+  build:
+    commands:
+      - echo "Build iniciado em `date`"
+      - echo "Gerando imagem da BIA..."
+      - docker build -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+    finally:
+      - echo "Build finalizado com sucesso em `date`"
+  post_build:
+    commands:
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo "Substituindo a tag da imagem no compose"
+      - sed -i "s|__IMAGE_URI__|$REPOSITORY_URI:$IMAGE_TAG|g" docker-compose.yml
+      - cat docker-compose.yml
+    finally:
+      - echo "Build finalizado com sucesso em `date`"
+artifacts:
+  files: docker-compose.yml
