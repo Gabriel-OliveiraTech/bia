@@ -11,5 +11,5 @@ phases:
       - echo "Build iniciado em `date` validação de dependências..."
       - npm install --loglevel=error
       - cd client && npm install && VITE_API_URL=http://alb-bia-1097740364.us-east-1.elb.amazonaws.com npm run build && cd ..
-      - echo "Rodando testes unitários..."`"
+      - echo "Rodando testes unitários..."
       - npm run test
