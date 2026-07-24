@@ -32,6 +32,7 @@ phases:
           "${REPOSITORY_URI}:${IMAGE_TAG}" \
           sh -c 'npx sequelize db:create; npx sequelize db:migrate'
       - echo "finalizando as migrations do banco de dados..."
+      - codebuild-breakpoint
       - echo "Fazendo push da imagem para o ECR..."
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
