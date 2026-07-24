@@ -23,7 +23,7 @@ phases:
 
   post_build:
     commands:
-      echo "Post-build iniciado em `date`"
+      - echo "Post-build iniciado em `date`"
       - echo "Executando as migrations do banco de dados..."
       - |
         set -e
