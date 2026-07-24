@@ -10,7 +10,7 @@ phases:
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
     finally:
-      - echo "Build finalizado com sucesso em `date`"  
+      - echo "Pré-build finalizado com sucesso em `date`" 
 
   build:
     commands:
@@ -23,12 +23,22 @@ phases:
 
   post_build:
     commands:
+      echo "Post-build iniciado em `date`"
+      - echo "Executando as migrations do banco de dados..."
+      - |
+        set -e
+        docker run --rm \
+          -e DB_HOST -e DB_USER -e DB_PWD -e DB_PORT -e NODE_ENV \
+          "${REPOSITORY_URI}:${IMAGE_TAG}" \
+          sh -c 'npx sequelize db:create; npx sequelize db:migrate'
+      - echo "finalizando as migrations do banco de dados..."
       - echo "Fazendo push da imagem para o ECR..."
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo "finalizando push da imagem para o ECR..."
       - echo "Gerando artefato da imagem para o ECS"
       - printf '[{"name":"bia","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
     finally:
-      - echo "Build finalizado com sucesso em `date`"
+      - echo "Post-build finalizado com sucesso em `date`"
 artifacts:
   files: imagedefinitions.json
