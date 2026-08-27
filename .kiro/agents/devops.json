@@ -1,16 +1,19 @@
 {
-  "$schema": "",
   "name": "devops",
   "description": "",
   "prompt": null,
   "welcomeMessage": null,
-  "tools": [],
+  "tools": ["*"],
   "toolAliases": {},
   "toolsSettings": null,
   "toolSchema": null,
   "mcpServers": {},
   "useLegacyMcpJson": false,
-  "resources": [],
+  "resources": [
+    "file://AmazonQ.md",
+    "file://README.md",
+    "file://.kiro/agents/rules/**/*.md"
+  ],
   "allowedTools": [],
   "model": null
 }

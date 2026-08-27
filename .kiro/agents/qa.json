@@ -1,16 +1,20 @@
 {
-  "$schema": "",
   "name": "qa",
-  "description": "",
+  "description": "Será o responsável por testar o software e garantir a qualidade do produto.",
   "prompt": null,
   "welcomeMessage": null,
-  "tools": [],
+  "tools": ["*"],
   "toolAliases": {},
   "toolsSettings": null,
   "toolSchema": null,
   "mcpServers": {},
   "useLegacyMcpJson": false,
-  "resources": [],
-  "allowedTools": [],
+  "resources": [
+    "file://AmazonQ.md",
+    "file://README.md",
+    "file://.kiro/agents/rules/**/*.md"
+  ],
+  "allowedTools": [
+  ],
   "model": null
 }
