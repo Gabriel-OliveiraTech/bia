@@ -82,3 +82,4 @@ curl -H "Accept: text/html" http://localhost:8080/api/versao
 
 # Acessar via navegador: http://localhost:8080/api/versao
 ```
+
