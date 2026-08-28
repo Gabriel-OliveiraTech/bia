@@ -15,6 +15,6 @@
     "file://.kiro/agents/rules/**/*.md",
     "file://.kiro/agents/po/**/*.md"
   ],
-  "allowedTools": [ "read", "write"],
+  "allowedTools": [ "read", "write", "shell"],
   "model": null
 }
