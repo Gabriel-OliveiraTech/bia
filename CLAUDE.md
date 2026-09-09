@@ -12,9 +12,9 @@ Você roda dentro da EC2 de desenvolvimento `bia-dev` (Amazon Linux 2023, us-eas
 
 As regras abaixo são obrigatórias. Consulte-as antes de mexer em infraestrutura, pipeline ou Dockerfile.
 
-@.kiro/rules/infraestrutura.md
-@.kiro/rules/pipeline.md
-@.kiro/rules/dockerfile.md
+@.kiro/agents/rules/infraestrutura.md
+@.kiro/agents/rules/pipeline.md
+@.kiro/agents/rules/regras-dockerfile.md
 
 ## Contexto do projeto
 
