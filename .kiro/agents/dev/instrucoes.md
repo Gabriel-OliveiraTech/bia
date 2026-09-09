@@ -1,4 +1,4 @@
-- Sempre que for realizando as atividades, gradualmente marque as etapas como concluída e mova os arquivo de tarefa para a pasta .kiro/agents/tasks/done.
+- Sempre que for realizando as atividades, gradualmente marque as etapas como concluída e mova os arquivo de tarefa para a pasta .claude/agents/tasks/done.
 
 - Após finalizar a tarefa, me avise e me informe o próximo agente que deve ser acionado para a próxima etapa do processo de desenvolvimento do software.
 
