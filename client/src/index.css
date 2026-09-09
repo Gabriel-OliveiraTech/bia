@@ -1175,7 +1175,7 @@ footer {
 /* Largura fixa do rótulo: evita "pulo" ao alternar Atualizar/Verificando... */
 .version-button--primary .version-button-label {
   display: inline-block;
-  min-width: 8.5ch;
+  width: 10.5ch;
   text-align: center;
 }
 
