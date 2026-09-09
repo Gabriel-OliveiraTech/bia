@@ -125,3 +125,5 @@ GET /api/cache-config  → { enabled: bool, endpoint: string, port: number, ttl:
 ## Estimativa
 **Complexidade:** Média
 **Tipo:** feat (nova página com UI/UX refinada)
+
+---
