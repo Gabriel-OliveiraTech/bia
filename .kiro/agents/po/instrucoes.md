@@ -46,6 +46,7 @@ crie o worktree correspondente:
 
 ```bash
 git worktree add ../bia-worktrees/[00]-[feat]-[resumo] feature/[00]-[feat]-[resumo]
+ln -s ../../bia/node_modules ../bia-worktrees/[00]-[feat]-[resumo]/node_modules
 ```
 
 Convencao:
@@ -54,8 +55,28 @@ Convencao:
 - **Nome da pasta:** identico ao sufixo da branch, sem o prefixo `feature/`.
 - Um worktree por tarefa. Nunca dois worktrees na mesma branch (o git recusa).
 
-O `node_modules` e resolvido por symlink automatico (`worktree.symlinkDirectories` em
-`.claude/settings.json`) — nao mande rodar `npm install` no worktree.
+## node_modules — symlink manual obrigatorio
+
+O comando `ln -s` acima **nao e opcional**. `node_modules` nao e versionado, entao um
+worktree novo nasce sem ele e qualquer `npm test` ou `npm run dev` falha.
+
+O symlink aponta para o `node_modules` do diretorio principal: evita reinstalar e evita
+duplicar ~118 MB por tarefa. Se o `client/node_modules` existir no diretorio principal,
+crie o symlink dele tambem:
+
+```bash
+ln -s ../../../bia/client/node_modules ../bia-worktrees/[00]-[feat]-[resumo]/client/node_modules
+```
+
+**Nao confie em `worktree.symlinkDirectories`** (em `.claude/settings.json`) para isso.
+Testado em 10/09/2026: aquela configuracao so vale para worktrees criados pelo proprio
+Claude Code (`--worktree`, `EnterWorktree`, `isolation` de agente). Um `git worktree add`
+executado via Bash nao a aciona — o worktree sai sem `node_modules`, nem symlink nem
+diretorio.
+
+Se as dependencias do diretorio principal estiverem desatualizadas em relacao ao
+`package.json` da tarefa (a branch adicionou um pacote novo), rode `npm install` **no
+diretorio principal** — o symlink propaga para todos os worktrees de uma vez.
 
 ## Delegacao
 
