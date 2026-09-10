@@ -150,66 +150,89 @@ const VersionInfo = () => {
     };
   };
 
+  const environment = getEnvironmentInfo();
+
   return (
     <div className="version-info">
-      <button 
-        className={`version-trigger ${apiStatus} ${getEnvironmentInfo().type}`}
+      <button
+        className={`version-trigger ${apiStatus} ${environment.type}`}
         onClick={handleVersionClick}
-        title={`${getEnvironmentInfo().icon} ${getEnvironmentInfo().label} | API: ${getStatusText()}`}
+        title={`${environment.icon} ${environment.label} | API: ${getStatusText()}`}
+        aria-expanded={showVersion}
         style={{
-          borderColor: apiStatus === 'online' ? getEnvironmentInfo().color : 
-                      apiStatus === 'offline' ? '#ef4444' : 
+          borderColor: apiStatus === 'online' ? environment.color :
+                      apiStatus === 'offline' ? '#ef4444' :
                       '#f59e0b'
         }}
       >
         {getStatusIcon()}
       </button>
-             {showVersion && (
-         <div className="version-tooltip">
-           <div className="version-content">
-             <strong>{apiVersion}</strong>
-             <div className="version-details">
-               <small>
-                 <span className="status-indicator">{getStatusIcon()}</span>
-                 Status: {getStatusText()}
-               </small>
-               <small>
-                 <span 
-                   className="env-indicator" 
-                   style={{ color: getEnvironmentInfo().color }}
-                 >
-                   {getEnvironmentInfo().icon}
-                 </span>
-                 Ambiente: {getEnvironmentInfo().label}
-               </small>
-               <small>Local: {getEnvironmentInfo().description}</small>
-               <small>API: {getApiUrl()}</small>
-               {cacheConfig && cacheConfig.enabled && (
-                 <small>Cache: {cacheConfig.endpoint}:{cacheConfig.port} - {cacheConfig.ttl}s</small>
-               )}
-               <small>
-                 <button 
-                   className="version-link" 
-                   onClick={openVersionEndpoint}
-                   title="Abrir endpoint de versão"
-                 >
-                   🔗 /api/versao
-                 </button>
-               </small>
-               <small>
-                 <button 
-                   className="version-link refresh-btn" 
-                   onClick={checkApiHealth}
-                   title="Verificar status da API"
-                   disabled={apiStatus === 'checking'}
-                 >
-                   🔄 {apiStatus === 'checking' ? 'Verificando...' : 'Atualizar'}
-                 </button>
-               </small>
-             </div>
-           </div>
-         </div>
-       )}
+
+      {showVersion && (
+        <div className="version-tooltip" role="dialog" aria-label="Informações da versão">
+          <div className="version-header">
+            <span className="version-app">Projeto BIA</span>
+            <span className={`version-badge ${apiStatus}`}>{apiVersion}</span>
+          </div>
+
+          <dl className="version-rows">
+            <div className="version-row">
+              <dt>Status da API</dt>
+              <dd className={`status-${apiStatus}`}>
+                <span className="status-indicator">{getStatusIcon()}</span>
+                {getStatusText()}
+              </dd>
+            </div>
+
+            <div className="version-row">
+              <dt>Ambiente</dt>
+              <dd style={{ color: environment.color }}>
+                <span className="env-indicator">{environment.icon}</span>
+                {environment.label}
+              </dd>
+            </div>
+
+            <div className="version-row">
+              <dt>Endereço</dt>
+              <dd className="version-mono" title={environment.description}>
+                {environment.description}
+              </dd>
+            </div>
+
+            <div className="version-row">
+              <dt>API</dt>
+              <dd className="version-mono" title={getApiUrl()}>{getApiUrl()}</dd>
+            </div>
+
+            {cacheConfig && cacheConfig.enabled && (
+              <div className="version-row">
+                <dt>Cache</dt>
+                <dd className="version-mono">
+                  {cacheConfig.endpoint}:{cacheConfig.port} · {cacheConfig.ttl}s
+                </dd>
+              </div>
+            )}
+          </dl>
+
+          <div className="version-actions">
+            <button
+              className="version-link"
+              onClick={openVersionEndpoint}
+              title="Abrir endpoint de versão"
+            >
+              🔗 Abrir /api/versao
+            </button>
+            <button
+              className="version-link refresh-btn"
+              onClick={checkApiHealth}
+              title="Verificar status da API"
+              disabled={apiStatus === 'checking'}
+            >
+              🔄 {apiStatus === 'checking' ? 'Verificando...' : 'Atualizar'}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
