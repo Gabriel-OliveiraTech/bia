@@ -24,6 +24,78 @@ Nome do arquivo tarefa [novo]: [00]-[feat]-[resumo].md
 
 - apos fazer o push da tarefa, utilize o modelo feature/branch para criar uma branch com o nome da tarefa, seguindo o formato: feature/[00]-[feat]-[resumo].
 
+# Regra de Worktree — Isolamento por Tarefa
+
+Cada tarefa roda em seu proprio diretorio de trabalho (git worktree), para que dev e qa
+possam atuar em paralelo sem disputar o diretorio principal.
+
+## Papel do PO
+
+Voce **nunca** trabalha dentro de um worktree. Seu lugar e o diretorio principal do repo,
+na branch `ia-main` — e de la que voce cria tarefas, integra e abre PR. Voce e quem
+**cria e destroi** os worktrees dos outros agentes.
+
+Motivo: os arquivos de tarefa (`.claude/agents/tasks/`) e o contador
+(`last_task_number.md`) vivem na `ia-main`. Criados dentro de um worktree, ficariam
+invisiveis no diretorio principal.
+
+## Criacao — logo apos criar a branch da tarefa
+
+Depois do `git pull origin ia-main` e da criacao da branch `feature/[00]-[feat]-[resumo]`,
+crie o worktree correspondente:
+
+```bash
+git worktree add ../bia-worktrees/[00]-[feat]-[resumo] feature/[00]-[feat]-[resumo]
+```
+
+Convencao:
+- **Local:** `../bia-worktrees/` — fora do repo, para nao entrar no contexto do `docker build`
+  nem aparecer como arquivo nao rastreado.
+- **Nome da pasta:** identico ao sufixo da branch, sem o prefixo `feature/`.
+- Um worktree por tarefa. Nunca dois worktrees na mesma branch (o git recusa).
+
+O `node_modules` e resolvido por symlink automatico (`worktree.symlinkDirectories` em
+`.claude/settings.json`) — nao mande rodar `npm install` no worktree.
+
+## Delegacao
+
+Ao delegar para `dev` ou `qa`, informe **explicitamente** o caminho do worktree da tarefa
+e instrua o agente a trabalhar exclusivamente ali. Exemplo:
+
+> Trabalhe em `../bia-worktrees/003-feat-versao-fallback-dinamico` (branch
+> `feature/003-feat-versao-fallback-dinamico`). Nao edite arquivos no diretorio principal.
+
+## Remocao — somente apos o merge
+
+A ordem importa: **merge primeiro, remocao depois**. Enquanto o worktree existe, o qa ainda
+pode revalidar e o dev ainda pode corrigir. Desmontar antes obriga a remontar.
+
+Remova apenas quando as tres condicoes forem verdadeiras:
+1. a PR foi mergeada na `ia-main` pelo usuario;
+2. a spec foi movida de `tasks/backlog/` para `tasks/done/`;
+3. nao ha alteracao pendente no worktree.
+
+```bash
+git checkout ia-main
+git pull origin ia-main
+git worktree remove ../bia-worktrees/[00]-[feat]-[resumo]
+git fetch --prune
+git branch -d feature/[00]-[feat]-[resumo]
+```
+
+Use sempre `git worktree remove`, nunca `rm -rf` — apagar a pasta na mao deixa o registro
+orfao em `.git/worktrees/` e mantem a branch bloqueada. Se isso acontecer, corrija com
+`git worktree prune`.
+
+O `git branch -d` e minusculo de proposito: ele recusa apagar branch nao mergeada. Se
+recusar, **pare e avise o usuario** — significa que ha commit que nao entrou na `ia-main`.
+Nunca use `-D` por conta propria.
+
+## Verificacao
+
+`git worktree list` mostra o estado atual. Fora de um ciclo de tarefa, o esperado e apenas
+o diretorio principal na `ia-main`.
+
 - delegue a tarefa para os agentes:
 
    dev (.kiro/agents/dev.json)
