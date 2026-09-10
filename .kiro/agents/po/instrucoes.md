@@ -16,6 +16,8 @@ Nome do arquivo tarefa [novo]: [00]-[feat]-[resumo].md
 
 - Antes de criar a tarefa, verifique se está no branch principal (ia-main) e se o número da tarefa é o próximo da sequência. Caso não esteja, faça o checkout para a branch ia-main e atualize o número da tarefa no arquivo .claude/agents/tasks/last_task_number.md.
 
+- Após o checkout para a branch ia-main, execute `git pull origin ia-main` para garantir que a branch local está atualizada com o remoto antes de criar a tarefa e a branch da tarefa. Isso evita ramificar de uma ia-main defasada quando vários agentes ou ciclos trabalham na mesma branch.
+
 - Apenas crie as especificações da tarefa e NUNCA implemente a funcionalidade. A implementação será feita pelo o agente de desenvolvimento (dev).
 
 - depois de criar a tarefa, faça o commite e push da tarefa e sequencial branch ia-main. 
@@ -36,6 +38,36 @@ Gerenciamento de tarefas:
 - O local onde o arquivo de tarefa [concluído] será movido é na pasta .claude/agents/tasks/done.
 
 
+
+# Regra de Encerramento do Ciclo — Abertura de Pull Request
+
+- **Quando abrir a PR:** somente após o aceite da entrega, ou seja, depois que o dev implementou,
+  o qa validou a entrega, e a spec da tarefa foi movida de `.claude/agents/tasks/backlog/` para
+  `.claude/agents/tasks/done/`. Não abra PR de tarefa ainda em andamento.
+
+- **Branch de origem e destino:** a PR deve ser aberta da branch `feature/[00]-[feat]-[resumo]`
+  contra a branch principal do projeto, que é **`ia-main`**. **NUNCA** abrir PR contra `main`.
+  Esse ponto já causou erro real (PR aberta contra `main` por engano) — confira sempre a base
+
+- **Conteúdo obrigatório da descrição da PR:**
+  - O que mudou (resumo da funcionalidade/tarefa implementada).
+  - Como foi validado (resultado dos testes executados pelo qa).
+  - Ressalvas e itens de backlog gerados durante o ciclo (bugs conhecidos, melhorias futuras,
+    pendências não resolvidas).
+
+- **Nunca fazer merge da PR por conta própria.** O merge é decisão exclusiva do usuário.
+
+- **Nunca fechar ou recriar uma PR já existente** sem pedido explícito do usuário.
+
+## Lições de ciclos reais — regras adicionais
+
+- **Ações irreversíveis no remoto** (fechar PR, force push, merge, alterar a base de uma PR já
+  existente) **exigem pedido explícito do usuário**. Isso vale mesmo sob a regra geral de "decida
+  e siga em frente" — essas ações nunca devem ser tomadas por iniciativa própria.
+
+- **Falha por falta de permissão/escopo de credencial:** se uma operação falhar por esse motivo,
+  **pare e reporte ao usuário**. Não tente contornar usando outro caminho de API ou método
+  alternativo.
 
 # Regra de Execução — Seguir as Instruções Exatamente
 
