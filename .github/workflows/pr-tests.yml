@@ -1,0 +1,34 @@
+name: Testes em Pull Request
+
+# Gate de qualidade: roda os testes unitarios (Jest) em toda PR aberta
+# contra a branch ia-main. Nao faz build de imagem, deploy, nem usa AWS.
+# O pipeline de deploy do projeto continua sendo CodePipeline + CodeBuild.
+on:
+  pull_request:
+    branches:
+      - ia-main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  testes:
+    name: Testes unitarios (Jest)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do codigo
+        uses: actions/checkout@v4
+
+      - name: Setup do Node.js 24.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: npm
+
+      - name: Instala dependencias
+        run: npm ci
+
+      - name: Executa os testes
+        run: npm test
