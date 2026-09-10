@@ -12,7 +12,8 @@
   "resources": [
     "file://AmazonQ.md",
     "file://README.md",
-    "file://.kiro/agents/rules/**/*.md"
+    "file://.kiro/agents/rules/**/*.md",
+    "file://.kiro/agents/qa/**/*.md"
   ],
   "allowedTools": [
   ],
