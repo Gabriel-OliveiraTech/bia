@@ -53,3 +53,30 @@ projeto (público-alvo são alunos em aprendizado).
 Esta especificação não deve ser implementada pelo agente de PO. A implementação
 cabe ao agente `dev`, com validação do agente `qa` e suporte do agente `devops`
 quando necessário.
+
+## Aceite (PO)
+
+**Veredito:** Aceito com ressalvas.
+
+**Critério 1 — PASSA.** `/api/versao` mantém texto plano `Bia {versao}` por padrão; HTML
+só é servido quando o header `Accept` contém `text/html`. Validado no controller (5
+cenários de `Accept`, incluindo ausência do header) e end-to-end via `docker compose`,
+incluindo simulação de health check do ALB. Consumidores não-navegador não são afetados.
+
+**Critério 2 — PASSA.** `VersionInfo.jsx` reestruturado como card, mantendo todas as
+informações anteriores (versão, status, ambiente, link, botão de recheck). `diff` contra
+a versão anterior confirma que nenhuma informação foi removida. Validado visualmente em
+tema claro, escuro e estado offline.
+
+**Critério 3 — PASSA.** Nenhuma dependência nova adicionada (`package.json` inalterado).
+
+**Critério 4 — PASSA.** `npx jest tests/unit` → 2 suites / 16 testes passando, confirmado
+de forma independente pelo PO.
+
+**Ressalvas registradas como itens de backlog:**
+- Responsividade dos breakpoints 320/480/640px não foi validada pelo QA (limitação do
+  ambiente de teste, não do código) — ver `002-test-validar-responsividade-versioninfo.md`.
+- Fallback de versão no controller segue como literal hardcoded (`"4.3.0"`) em vez de ler
+  de `package.json` — ver `003-feat-versao-fallback-dinamico.md`.
+
+**Aceito por:** PO (Product Owner), 2026-09-10.
