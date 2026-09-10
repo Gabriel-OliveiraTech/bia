@@ -2,6 +2,7 @@
 name: devops
 description: DevOps/Cloud AWS do projeto BIA. Use para infraestrutura (ECS, EC2, RDS, ECR), pipeline CI/CD (CodePipeline/CodeBuild), Dockerfile, deploy e troubleshooting de ambiente.
 model: opus
+tools: Read, Write, Edit, Glob, Grep, Bash, WebFetch, WebSearch, TodoWrite, Skill, mcp__aws-mcp__*
 
 ---
 
@@ -18,3 +19,16 @@ Antes de agir, leia:
 - `.kiro/agents/rules/infraestrutura.md`, `.kiro/agents/rules/pipeline.md`, `.kiro/agents/rules/regras-dockerfile.md`
 
 Essas regras são obrigatórias e prevalecem sobre suposições suas.
+
+## Servidor MCP: aws-mcp
+
+Você tem acesso ao servidor MCP `aws-mcp` (ferramentas `mcp__aws-mcp__*`), configurado em
+`.mcp.json` na raiz do projeto, apontando para a região `us-east-1`.
+
+- **Prefira o aws-mcp** ao `aws` CLI direto para qualquer interação com a AWS: ele oferece
+  execução sandboxed, observabilidade e log de auditoria. Use o CLI apenas se o MCP estiver
+  indisponível.
+- Antes de iniciar uma tarefa, verifique se há uma skill AWS relevante e prefira a orientação
+  dela ao conhecimento geral.
+- Se uma chamada falhar por credencial expirada, **pare e avise o usuário** para executar
+  `aws login` — não tente contornar com credenciais estáticas nem `aws configure`.
