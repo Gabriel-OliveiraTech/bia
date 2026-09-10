@@ -1,3 +1,5 @@
+const { version: versaoPackage } = require("../../package.json");
+
 module.exports = () => {
   const controller = {};
 
@@ -63,7 +65,7 @@ module.exports = () => {
 </html>`;
 
   controller.get = async (req, res) => {
-    const versao = process.env.VERSAO_API || "4.3.0";
+    const versao = process.env.VERSAO_API || versaoPackage;
     const responseString = `Bia ${versao}`;
 
     if (querHtml(req)) {
